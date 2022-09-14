@@ -12,13 +12,22 @@ namespace HotelBooking.Core
         private IRepository<Booking> bookingRepository;
         private IRepository<Room> roomRepository;
 
-        // Constructor injection 
+        /// <summary>
+        /// Constructor injection 
+        /// </summary>
+        /// <param name="bookingRepository"></param>
+        /// <param name="roomRepository"></param>
         public BookingManager(IRepository<Booking> bookingRepository, IRepository<Room> roomRepository)
         {
             this.bookingRepository = bookingRepository;
             this.roomRepository = roomRepository;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="booking"></param>
+        /// <returns></returns>
         public bool CreateBooking(Booking booking)
         {
             int roomId = FindAvailableRoom(booking.StartDate, booking.EndDate);
