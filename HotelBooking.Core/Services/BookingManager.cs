@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace HotelBooking.Core
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class BookingManager : IBookingManager
     {
         private IRepository<Booking> bookingRepository;
@@ -33,6 +36,13 @@ namespace HotelBooking.Core
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public int FindAvailableRoom(DateTime startDate, DateTime endDate)
         {
             if (startDate <= DateTime.Today || startDate > endDate)
@@ -51,6 +61,13 @@ namespace HotelBooking.Core
             return -1;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public List<DateTime> GetFullyOccupiedDates(DateTime startDate, DateTime endDate)
         {
             if (startDate > endDate)
