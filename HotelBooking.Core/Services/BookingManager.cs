@@ -9,7 +9,7 @@ namespace HotelBooking.Core
         private IRepository<Booking> bookingRepository;
         private IRepository<Room> roomRepository;
 
-        // Constructor injection
+        // Constructor injection 
         public BookingManager(IRepository<Booking> bookingRepository, IRepository<Room> roomRepository)
         {
             this.bookingRepository = bookingRepository;
