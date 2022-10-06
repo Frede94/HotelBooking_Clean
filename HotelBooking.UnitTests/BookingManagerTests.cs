@@ -13,6 +13,7 @@ namespace HotelBooking.UnitTests
         private Mock<IRepository<Booking>> fakeBookRepo;
         private Mock<IRepository<Room>> fakeRoomRepo;
 
+        #region Startup-region
         public BookingManagerTests(){
             DateTime start = DateTime.Today.AddDays(10);
             DateTime end = DateTime.Today.AddDays(20);
@@ -39,7 +40,9 @@ namespace HotelBooking.UnitTests
             //IRepository<Room> roomRepository = new FakeRoomRepository();
             bookingManager = new BookingManager(fakeBookRepo.Object, fakeRoomRepo.Object);
         }
+        #endregion
 
+        #region CreateBooking-Tests-Region
         [Theory]
         [InlineData(9, 9, true)]
         [InlineData(21, 21, true)]
@@ -87,7 +90,9 @@ namespace HotelBooking.UnitTests
             bool created = bookingManager.CreateBooking(booking);
             Assert.False(created);
         }
+        #endregion
 
+        #region FindAvailableRoom-Tests-Region
         [Fact]
         public void FindAvailableRoom_StartDateNotInTheFuture_ThrowsArgumentException()
         {
@@ -111,6 +116,76 @@ namespace HotelBooking.UnitTests
             // Assert
             Assert.NotEqual(-1, roomId);
         }
+        [Fact]
+        public void FindAvailableRoom_RoomNotAvailable_RoomIdIsMinusOne()
+        {
+            // Arrange
+            DateTime date = DateTime.Today.AddDays(5);
+            DateTime endDate = DateTime.Today.AddDays(13);
+            // Act
+            int roomId = bookingManager.FindAvailableRoom(date, endDate);
+            // Assert
+            Assert.Equal(-1, roomId);
+        }
+        [Theory]
+        [InlineData(9, 21, -1)]
+        [InlineData(9, 10, -1)]
+        [InlineData(9, 20, -1)]
+        [InlineData(10, 21, -1)]
+        [InlineData(20, 21, -1)]
+        public void IsAvailableRoom_RoomNotAvailable_RoomIdIsMinusOne(int start, int end, int expected)
+        {
+            // Arrange
+            DateTime date = DateTime.Today.AddDays(start);
+            DateTime endDate = DateTime.Today.AddDays(end);
+            // Act
+            int roomId = bookingManager.FindAvailableRoom(date, endDate);
+            // Assert
+            Assert.Equal(expected, roomId);
+        }
+        #endregion
+
+        #region GetFullyOccupiedDates-Tests-Region
+        [Fact]
+        public void GetFullyOccupiedDates_StartDateNotLaterThanEndDate_ThrowsArgumentException()
+        {
+            DateTime startDate = DateTime.Today.AddDays(1);
+            DateTime endDate = DateTime.Today;
+            Action act = () => bookingManager.GetFullyOccupiedDates(startDate, endDate);
+            Assert.Throws<ArgumentException>(act);
+        }
+
+        [Theory]
+        [InlineData(1, 9, 0)]
+        [InlineData(18, 300, 3)]
+        [InlineData(19, 300, 2)]
+        [InlineData(20, 300, 1)]
+        [InlineData(17, 300, 4)]
+        [InlineData(16, 300, 5)]
+        [InlineData(15, 300, 6)]
+        [InlineData(14, 300, 7)]
+        [InlineData(13, 300, 8)]
+        [InlineData(12, 300, 9)]
+        [InlineData(2, 300, 11)]
+        [InlineData(3, 300, 11)]
+        [InlineData(77, 300, 0)]
+        [InlineData(7, 300, 11)]
+        [InlineData(64, 300, 0)]
+        [InlineData(90, 300, 0)]
+        [InlineData(88, 300, 0)]
+        [InlineData(78, 300, 0)]
+        [InlineData(65, 300, 0)]
+        [InlineData(33, 300, 0)]
+        [InlineData(32, 300, 0)]
+        [InlineData(44, 300, 0)]
+        public void GetFullyOccupiedDates_DatesRangingBetweenFullyAndNonFullyOccupiedDates_ReturnsTheRightAmountOfFullyOccupiedDates(int x, int y, int expected)
+        {
+            DateTime date = DateTime.Today.AddDays(x);
+            DateTime endDate = DateTime.Today.AddDays(y);
+            var noOfOccupiedDates = bookingManager.GetFullyOccupiedDates(date, endDate).Count;
+            Assert.Equal(expected, noOfOccupiedDates);
+        }
+        #endregion
 
     }
 }
