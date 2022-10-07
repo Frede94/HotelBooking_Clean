@@ -149,9 +149,12 @@ namespace HotelBooking.UnitTests
         [Fact]
         public void GetFullyOccupiedDates_StartDateNotLaterThanEndDate_ThrowsArgumentException()
         {
+            // Arrange
             DateTime startDate = DateTime.Today.AddDays(1);
             DateTime endDate = DateTime.Today;
+            // Act
             Action act = () => bookingManager.GetFullyOccupiedDates(startDate, endDate);
+            // Assert
             Assert.Throws<ArgumentException>(act);
         }
 
@@ -180,9 +183,12 @@ namespace HotelBooking.UnitTests
         [InlineData(44, 300, 0)]
         public void GetFullyOccupiedDates_DatesRangingBetweenFullyAndNonFullyOccupiedDates_ReturnsTheRightAmountOfFullyOccupiedDates(int x, int y, int expected)
         {
+            // Arrange
             DateTime date = DateTime.Today.AddDays(x);
             DateTime endDate = DateTime.Today.AddDays(y);
+            // Act
             var noOfOccupiedDates = bookingManager.GetFullyOccupiedDates(date, endDate).Count;
+            // Assert
             Assert.Equal(expected, noOfOccupiedDates);
         }
         #endregion
