@@ -53,12 +53,15 @@ namespace HotelBooking.UnitTests
         [InlineData(65, 75, true)]
         public void CreateBooking_BookingDateAvailable_ReturnsTrue(int start, int end, bool expected)
         {
+            // Arrange
             var booking = new Booking
             {
                 StartDate = DateTime.Today.AddDays(start),
                 EndDate = DateTime.Today.AddDays(end)
             };
+            // Act
             bool created = bookingManager.CreateBooking(booking);
+            // Assert
             Assert.Equal(expected, created);
         }
 
@@ -70,12 +73,42 @@ namespace HotelBooking.UnitTests
         [InlineData(20, 21, false)]
         public void CreateBooking_BookingDateNotAvailable_ReturnsFalse(int start, int end, bool expected)
         {
+            // Arrange
             var booking = new Booking
             {
                 StartDate = DateTime.Today.AddDays(start),
                 EndDate = DateTime.Today.AddDays(end)
             };
+            // Act
             bool created = bookingManager.CreateBooking(booking);
+            // Assert
+            Assert.Equal(expected, created);
+        }
+
+        [Theory]
+        [InlineData(9, 9, true)]
+        [InlineData(21, 21, true)]
+        [InlineData(1, 5, true)]
+        [InlineData(2, 7, true)]
+        [InlineData(25, 27, true)]
+        [InlineData(22, 22, true)]
+        [InlineData(65, 75, true)]
+        [InlineData(9, 21, false)]
+        [InlineData(9, 10, false)]
+        [InlineData(9, 20, false)]
+        [InlineData(10, 21, false)]
+        [InlineData(20, 21, false)]
+        public void CreateBooking_BookingDateAvailable_ReturnsTrue_BookingDateNotAvailable_ReturnsFalse(int start, int end, bool expected)
+        {
+            // Arrange
+            var booking = new Booking
+            {
+                StartDate = DateTime.Today.AddDays(start),
+                EndDate = DateTime.Today.AddDays(end)
+            };
+            // Act
+            bool created = bookingManager.CreateBooking(booking);
+            // Assert
             Assert.Equal(expected, created);
         }
 
@@ -128,6 +161,9 @@ namespace HotelBooking.UnitTests
             Assert.Equal(-1, roomId);
         }
         [Theory]
+        [InlineData(1, 2, 1)]
+        [InlineData(3, 4, 1)]
+        [InlineData(5, 6, 1)]
         [InlineData(9, 21, -1)]
         [InlineData(9, 10, -1)]
         [InlineData(9, 20, -1)]
