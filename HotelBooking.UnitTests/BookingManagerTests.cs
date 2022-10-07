@@ -13,7 +13,7 @@ namespace HotelBooking.UnitTests
         private Mock<IRepository<Booking>> fakeBookRepo;
         private Mock<IRepository<Room>> fakeRoomRepo;
 
-        #region Startup-region
+        #region Constructor-region
         public BookingManagerTests(){
             DateTime start = DateTime.Today.AddDays(10);
             DateTime end = DateTime.Today.AddDays(20);
@@ -32,6 +32,7 @@ namespace HotelBooking.UnitTests
 
             fakeBookRepo = new Mock<IRepository<Booking>>();
             fakeRoomRepo = new Mock<IRepository<Room>>();
+
 
             fakeRoomRepo.Setup(r => r.GetAll()).Returns(rooms);
             fakeBookRepo.Setup(r => r.GetAll()).Returns(booking);
